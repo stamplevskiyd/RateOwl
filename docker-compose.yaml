@@ -1,11 +1,11 @@
 version: "3.9"
 
 services:
-  api:
+  owl:
     build: .
     container_name: owl_backend
     env_file:
-      - .env                # optional: keep secrets out of git
+      - .env
     environment:
       # fallback values if .env is missing
       - DATABASE_URL=postgresql+psycopg2://postgres:postgres@db:5432/owl_db
@@ -14,7 +14,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./:/app           # монтируем корень проекта
+      - ./:/app
     restart: unless-stopped
 
   db:
