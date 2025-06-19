@@ -1,0 +1,17 @@
+[project]
+name = "rate_owl"
+version = "0.1.0"
+description = "Rating and review serivice based on FastApi"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.115.13",
+    "sqlalchemy>=2.0.41",
+    "uvicorn>=0.34.3",
+]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.16.1",
+    "ruff>=0.12.0",
+]
