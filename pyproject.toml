@@ -5,8 +5,12 @@ description = "Rating and review serivice based on FastApi"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "alembic>=1.16.2",
+    "asyncpg>=0.30.0",
     "fastapi>=0.115.13",
-    "sqlalchemy>=2.0.41",
+    "greenlet>=3.2.3",
+    "pydantic-settings>=2.9.1",
+    "sqlalchemy[asyncio]>=2.0.41",
     "uvicorn>=0.34.3",
 ]
 

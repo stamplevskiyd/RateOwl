@@ -5,10 +5,10 @@ services:
     build: .
     container_name: owl_backend
     env_file:
-      - .env
-    environment:
-      # fallback values if .env is missing
-      - DATABASE_URL=postgresql+psycopg2://postgres:postgres@db:5432/owl_db
+      - path: .env-default
+        required: true
+      - path: .env
+        required: false
     depends_on:
       - db
     ports:
@@ -20,13 +20,17 @@ services:
   db:
     image: postgres:16-alpine
     container_name: postgres
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: owl_db
+    env_file:
+      - path: .env-default
+        required: true
+      - path: .env
+        required: false
+    ports:
+      - "5432:5432"
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - owl-data:/var/lib/postgresql/data
     restart: unless-stopped
 
 volumes:
-  postgres-data:
+  owl-data:
+    external: false
