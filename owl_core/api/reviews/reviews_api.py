@@ -1,4 +1,5 @@
-from typing import Annotated
+from typing import Annotated, Iterable
+from sqlalchemy import select
 
 from fastapi import APIRouter, status, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -21,3 +22,11 @@ async def add_review(
     await session.commit()
     await session.refresh(new_review)
     return new_review
+
+
+@reviews_router.get("/", response_model=list[ReviewGet])
+async def get_reviews(session: Annotated[AsyncSession, Depends(get_session)]) -> Iterable[Review]:
+    query = select(Review)
+    reviews = await session.execute(query)
+    return reviews.scalars().all()
+
