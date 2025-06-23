@@ -1,18 +1,19 @@
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
     # `.env` takes priority over `.env.local`
     model_config = SettingsConfigDict(env_file=(".env.local", ".env"))
-    DB_HOST: str = "postgres"
-    DB_PORT: int = 5432
-    DB_NAME: str = "owl_db"
-    DB_USER: str = "owl"
-    DB_PASSWORD: str = "hoot"
-    SECRET_KEY: str = "secret"
+    DB_HOST: str = Field("postgres", alias="POSTGRES_HOST")
+    DB_PORT: int = Field(5432, alias="POSTGRES_PORT")
+    DB_NAME: str = Field("owl_db", alias="POSTGRES_DB")
+    DB_USER: str = Field("owl", alias="POSTGRES_USER")
+    DB_PASSWORD: str = Field("hoot", alias="POSTGRES_PASSWORD")
+    SECRET_KEY: str
 
 
-settings = Settings()
+settings = Settings()  # type: ignore
 
 
 def get_db_url() -> str:

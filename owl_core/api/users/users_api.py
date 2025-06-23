@@ -1,102 +1,23 @@
 from typing import Annotated
-from datetime import datetime, timedelta, timezone
 
-import jwt
 from fastapi import APIRouter, status, Depends, HTTPException
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from jwt import InvalidTokenError
-from passlib.context import CryptContext
-from pydantic import BaseModel
+from fastapi.security import OAuth2PasswordRequestForm
 
-from owl_core.config import settings
+from owl_core.api.users.dependencies import get_current_active_user
+from owl_core.api.users.utils import (
+    authenticate_user,
+    create_access_token,
+    get_password_hash,
+)
+from owl_core.daos.dependencies import get_dao_factory
+from owl_core.daos.schemas import Token
 from owl_core.daos.user_dao import UserDAO
-from owl_core.db.session import SessionDep
 from owl_core.models.users import User
 from owl_core.schemas.users import UserPost, UserGet
 
-SECRET_KEY = settings.SECRET_KEY
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
-
 users_router = APIRouter(prefix="/users", tags=["Users"])
 
-
-async def get_user_dao(session: SessionDep) -> UserDAO:
-    return UserDAO(session)
-
-
-UserDAODep = Annotated[UserDAO, Depends(get_user_dao)]
-
-
-class Token(BaseModel):
-    access_token: str
-    token_type: str
-
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="v1/users/token")
-
-
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    """Check if user's password is valid"""
-    return pwd_context.verify(plain_password, hashed_password)
-
-
-def get_password_hash(password: str) -> str:
-    """Generate a password hash"""
-    return pwd_context.hash(password)
-
-
-async def authenticate_user(
-    username: str, password: str, user_dao: UserDAODep
-) -> User | None:
-    """User authentication check if user exists)"""
-    user: User | None = await user_dao.find_by_username_or_email(username)
-    if not user or not user.active:
-        return None
-    if not verify_password(password, user.hashed_password):
-        return None
-    return user
-
-
-def create_access_token(data: dict) -> str:
-    """Generate access token for authenticated user"""
-    to_encode = data.copy()
-    expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-    return encoded_jwt
-
-
-async def get_current_user(
-    token: Annotated[Token, Depends(oauth2_scheme)], user_dao: UserDAODep
-) -> User:
-    """Get current authenticated user"""
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username = payload.get("sub")
-        if not username:
-            raise credentials_exception
-    except InvalidTokenError:
-        raise credentials_exception
-    user = await user_dao.find_by_username_or_email(username)
-    if user is None:
-        raise credentials_exception
-    return user
-
-
-async def get_current_active_user(
-    current_user: Annotated[User, Depends(get_current_user)],
-) -> User:
-    if not current_user.active:
-        raise HTTPException(status_code=400, detail="Inactive user")
-    return current_user
+UserDAODep = Annotated[UserDAO, Depends(get_dao_factory(UserDAO))]
 
 
 @users_router.post("/token")

@@ -3,10 +3,10 @@ services:
     build: .
     container_name: owl_backend
     env_file:
-      - path: .env-default
-        required: true
       - path: .env
         required: false
+      - path: .env.default
+        required: true
     depends_on:
       - db
     ports:
@@ -19,12 +19,12 @@ services:
     image: postgres:16-alpine
     container_name: postgres
     env_file:
-      - path: .env-default
-        required: true
       - path: .env
         required: false
+      - path: .env.default
+        required: true
     ports:
-      - "5432:5432"
+      - "5432:5433"
     volumes:
       - owl-data:/var/lib/postgresql/data
     restart: unless-stopped

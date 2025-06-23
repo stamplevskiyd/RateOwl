@@ -12,16 +12,15 @@ class BaseDAO[T]:
     """Base Data Access Object for CRUD operations."""
 
     """Model class for the DAO."""
-    model_cls: type[T] | None = None
-
-    def __init_subclass__(cls) -> None:
-        cls.model_cls = get_args(
-            cls.__orig_bases__[0]  # type: ignore
-        )[0]
-        assert cls.model_cls is not None
+    model_cls: type[T]
 
     def __init__(self, session: AsyncSession):
         self.session = session
+
+        # Get class from type hints
+        self.model_cls = get_args(
+            self.__class__.__orig_bases__[0]  # type: ignore
+        )[0]
 
     async def create(self, data: dict[str, Any], commit: bool = True) -> T:
         new_obj = self.model_cls(**data)
@@ -56,4 +55,4 @@ class BaseDAO[T]:
     async def find_all(self) -> list[T]:
         query = select(self.model_cls)
         result = await self.session.execute(query)
-        return result.scalars().all()
+        return list(result.scalars().all())
