@@ -31,6 +31,21 @@ class BaseDAO[T]:
         await self.session.refresh(new_obj)
         return new_obj
 
+    async def update(self, obj: T, data: dict[str, Any], commit: bool = True) -> T:
+        for key, value in data.items():
+            setattr(obj, key, value)
+        if commit:
+            await self.session.commit()
+        await self.session.refresh(obj)
+        return obj
+
+    async def delete(self, obj: T, commit: bool = True) -> T:
+        await self.session.delete(obj)
+        if commit:
+            await self.session.commit()
+        await self.session.refresh(obj)
+        return obj
+
     async def find_by_id(self, pk: int) -> T | None:
         """Find an object by its id"""
         # TODO: move to get by pk?

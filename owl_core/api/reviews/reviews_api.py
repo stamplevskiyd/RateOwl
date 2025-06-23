@@ -2,11 +2,17 @@ from typing import Iterable, Annotated
 
 from fastapi import APIRouter, status, Depends
 
-from owl_core.daos.review_dao import ReviewDAO, get_review_dao
+from owl_core.daos.review_dao import ReviewDAO
+from owl_core.db.session import SessionDep
 from owl_core.models.reviews import Review
 from owl_core.schemas.reviews import ReviewPost, ReviewGet
 
 reviews_router = APIRouter(prefix="/reviews", tags=["Rates"])
+
+
+async def get_review_dao(session: SessionDep) -> ReviewDAO:
+    return ReviewDAO(session)
+
 
 ReviewDAODep = Annotated[ReviewDAO, Depends(get_review_dao)]
 

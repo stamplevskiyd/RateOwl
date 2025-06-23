@@ -1,3 +1,5 @@
+import datetime
+
 from pydantic import BaseModel, Field
 
 
@@ -8,6 +10,8 @@ class ReviewBase(BaseModel):
 
 class ReviewGet(ReviewBase):
     id: int
+    created_at: datetime.datetime
+    updated_at: datetime.datetime
 
 
 class ReviewPost(ReviewBase):

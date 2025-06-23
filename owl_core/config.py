@@ -1,13 +1,15 @@
-from pydantic_settings import BaseSettings
-from pydantic import Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    DB_HOST: str = Field("postgres", env="DB_HOST")
-    DB_PORT: int = Field(5432, env="DB_PORT")
-    DB_NAME: str = Field("owl_db", env="DB_DB")
-    DB_USER: str = Field("owl", env="DB_USER")
-    DB_PASSWORD: str = Field("hoot", env="DB_PASSWORD")
+    # `.env` takes priority over `.env.local`
+    model_config = SettingsConfigDict(env_file=(".env.local", ".env"))
+    DB_HOST: str = "postgres"
+    DB_PORT: int = 5432
+    DB_NAME: str = "owl_db"
+    DB_USER: str = "owl"
+    DB_PASSWORD: str = "hoot"
+    SECRET_KEY: str = "secret"
 
 
 settings = Settings()
