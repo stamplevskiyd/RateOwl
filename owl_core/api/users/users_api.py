@@ -2,6 +2,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, status, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
+from pydantic import BaseModel
 
 from owl_core.api.users.dependencies import get_current_active_user
 from owl_core.api.users.utils import (
@@ -20,9 +21,32 @@ users_router = APIRouter(prefix="/users", tags=["Users"])
 UserDAODep = Annotated[UserDAO, Depends(get_dao_factory(UserDAO))]
 
 
+# TODO: this is not an api. move to views or even deprecate
+# @users_router.post("/token")
+# async def login_for_access_token(
+#     form_data: Annotated[OAuth2PasswordRequestForm, Depends()], user_dao: UserDAODep
+# ) -> Token:
+#     """Login by access token"""
+#     user: User | None = await authenticate_user(
+#         form_data.username, form_data.password, user_dao
+#     )
+#     if not user:
+#         raise HTTPException(
+#             status_code=status.HTTP_401_UNAUTHORIZED,
+#             detail="Incorrect username or password",
+#             headers={"WWW-Authenticate": "Bearer"},
+#         )
+#     access_token = create_access_token(data={"sub": user.username})
+#     return Token(access_token=access_token, token_type="bearer")
+
+class LoginBody(BaseModel):
+    username: str
+    password: str
+
+# TODO: duplicate
 @users_router.post("/token")
-async def login_for_access_token(
-    form_data: Annotated[OAuth2PasswordRequestForm, Depends()], user_dao: UserDAODep
+async def login(
+    form_data: LoginBody, user_dao: UserDAODep
 ) -> Token:
     """Login by access token"""
     user: User | None = await authenticate_user(
