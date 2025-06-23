@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     DB_NAME: str = Field("owl_db", alias="POSTGRES_DB")
     DB_USER: str = Field("owl", alias="POSTGRES_USER")
     DB_PASSWORD: str = Field("hoot", alias="POSTGRES_PASSWORD")
-    SECRET_KEY: str
+    SECRET_KEY: str = Field("owerride-me-secret-key")
 
 
 settings = Settings()  # type: ignore

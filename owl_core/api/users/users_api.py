@@ -10,7 +10,7 @@ from owl_core.api.users.utils import (
     get_password_hash,
 )
 from owl_core.daos.dependencies import get_dao_factory
-from owl_core.daos.schemas import Token
+from owl_core.api.schemas import Token
 from owl_core.daos.user_dao import UserDAO
 from owl_core.models.users import User
 from owl_core.schemas.users import UserPost, UserGet

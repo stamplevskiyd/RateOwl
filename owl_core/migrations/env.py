@@ -18,6 +18,7 @@ from owl_core.db.base import Base
 ########## Models import ##########
 from owl_core.models.reviews import Review  # noqa
 from owl_core.models.users import User  # noqa
+from owl_core.models.titles import Title  # noqa
 ###################################
 
 # this is the Alembic Config object, which provides
