@@ -1,20 +1,24 @@
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 import api from '@/api';
-import { Review } from '@/types';
+import {Review} from '@/types';
 import ReviewCard from '@/components/ReviewCard';
 
 export default function Home() {
-  const [reviews, setReviews] = useState<Review[]>([]);
+    const [reviews, setReviews] = useState<Review[]>([]);
 
-  useEffect(() => {
-    api.get<Review[]>('/reviews/').then((res) => setReviews(res.data));
-  }, []);
+    useEffect(() => {
+        api.get<Review[]>('/v1/reviews/').then((res) => setReviews(res.data));
+    }, []);
 
-  return (
-    <div className="max-h-[calc(100vh-80px)] overflow-y-auto pr-2">
-      {reviews.map((r) => (
-        <ReviewCard key={r.id} review={r} />
-      ))}
-    </div>
-  );
+    // frontend/src/pages/Home.tsx  (фрагмент)
+
+    return (
+        <main className="mx-auto mt-6 w-full max-w-3xl">
+            <div className="space-y-6 px-4 pb-8">         {/* ← добавили отступы */}
+                {reviews.map(r => (
+                    <ReviewCard key={r.id} review={r}/>
+                ))}
+            </div>
+        </main>
+    );
 }
