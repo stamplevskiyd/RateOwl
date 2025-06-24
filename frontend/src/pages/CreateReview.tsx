@@ -21,7 +21,7 @@ export default function CreateReview() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        await api.post('/v1/reviews/add', {
+        await api.post('api/v1/reviews/add', {
             ...payload,
             rate: payload.rating,
             tag_ids: payload.tags.map(t => t.id), // если бек ждёт id-шники

@@ -8,6 +8,7 @@ export default function TagList() {
     const [items, setItems] = useState<TagRead[]>([]);
     const [show, setShow] = useState(false);
     const [name, setName] = useState('');
+    const [slug, setSlug] = useState('');
 
     useEffect(() => {
         let cancelled = false;
@@ -27,7 +28,7 @@ export default function TagList() {
     }, []);
 
     const create = async () => {
-        await api.post('/api/v1/tags/add', {name});
+        await api.post('api/v1/tags/add', {name, ...(slug && {slug})});
         setName('');
         setShow(false);
         load();
@@ -40,7 +41,7 @@ export default function TagList() {
                 <button
                     className="rounded-md bg-spruce-500 px-3 py-1.5 text-sm text-gray-100 hover:bg-spruce-600"
                     onClick={() => setShow(true)}>
-                    + Тег
+                    Тег
                 </button>
             </div>
 
@@ -59,6 +60,12 @@ export default function TagList() {
                         value={name}
                         onChange={e => setName(e.target.value)}
                         placeholder="Название тега"
+                    />
+                    <input
+                        className="mb-4 w-full rounded-md bg-zinc-700 p-2"
+                        value={slug}
+                        onChange={e => setSlug(e.target.value)}
+                        placeholder="slug-тега (опционально)"
                     />
                     <div className="flex justify-end gap-2">
                         <button onClick={() => setShow(false)}>Отмена</button>

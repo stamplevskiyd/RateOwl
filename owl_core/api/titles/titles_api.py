@@ -25,7 +25,7 @@ async def get_title_by_id(title: str, title_dao: TitleDAODep) -> Title:
     return title_obj
 
 
-@titles_router.post("/", response_model=TitleGet)
+@titles_router.post("/add", response_model=TitleGet)
 async def create_title(title: TitlePost, title_dao: TitleDAODep) -> Title:
     title_dict = title.model_dump()
     return await title_dao.create(title_dict)

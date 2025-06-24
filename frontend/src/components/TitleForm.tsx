@@ -7,9 +7,14 @@ import {TagRead} from '@/types';
 
 export default function TitleForm({onClose}: { onClose: () => void }) {
     const [name, setName] = useState('');
+    const [slug, setSlug] = useState('');
     const [tags, setTags] = useState<TagRead[]>([]);
     const save = async () => {
-        await api.post('/api/v1/titles/add', {name, tags: tags.map(t => t.id)});
+        await api.post('api/v1/titles/add', {
+            name,
+            ...(slug && {slug}),
+            tags: tags.map(t => t.id),
+        });
         onClose();
     };
 
@@ -21,6 +26,16 @@ export default function TitleForm({onClose}: { onClose: () => void }) {
                     className="w-full rounded-md bg-zinc-700 p-2"
                     value={name}
                     onChange={e => setName(e.target.value)}
+                />
+            </label>
+
+            <label className="block pb-4">
+                <span className="mb-1 inline-block">Slug (необязательно)</span>
+                <input
+                    className="w-full rounded-md bg-zinc-700 p-2"
+                    value={slug}
+                    onChange={e => setSlug(e.target.value)}
+                    placeholder="kak-priruchit-drakona"
                 />
             </label>
 
