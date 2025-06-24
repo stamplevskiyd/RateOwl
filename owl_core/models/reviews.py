@@ -9,6 +9,7 @@ from owl_core.models.mixins import TimedMixin
 if TYPE_CHECKING:
     from owl_core.models.users import User
     from owl_core.models.titles import Title
+    from owl_core.models.tags import Tag
 
 
 class Review(Base, TimedMixin):
@@ -27,3 +28,7 @@ class Review(Base, TimedMixin):
 
     def __repr__(self) -> str:
         return f"<Review({self.description})>"
+
+    @property
+    def tags(self) -> list["Tag"]:
+        return self.title.tags

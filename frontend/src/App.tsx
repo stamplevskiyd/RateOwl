@@ -5,6 +5,8 @@ import Login from '@/pages/Login';
 import {AuthProvider, useAuth} from '@/context/AuthContext';
 import CreateReview from '@/pages/CreateReview';
 import ReviewDetails from '@/pages/ReviewDetails';
+import TitleList from '@/pages/TitleList';
+import TagList from '@/pages/TagList';
 
 function ProtectedRoute({children}: { children: JSX.Element }) {
     const {token} = useAuth();
@@ -31,6 +33,8 @@ export default function App() {
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/create" element={<CreateReview/>}/>
                     <Route path="/reviews/:id" element={<ReviewDetails />} />
+                    <Route path="/titles" element={<TitleList />} />
+                    <Route path="/tags" element={<TagList />} />
                 </Routes>
             </div>
         </AuthProvider>

@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import StarRating from '@/components/StarRating';
-import api from '@/api';           // axios instance с токеном
+import TagSelector from '@/components/TagSelector';
+import api from '@/api';
 import {TitleRead, ReviewCreate} from '@/types';
 import {useNavigate} from 'react-router-dom';
 
@@ -11,6 +12,7 @@ export default function CreateReview() {
         title_id: '',
         rating: 5,
         content: '',
+        tags: [] as TagRead[],
     });
 
     useEffect(() => {
@@ -19,7 +21,11 @@ export default function CreateReview() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        await api.post('/api/v1/reviews/', payload);
+        await api.post('/v1/reviews/add', {
+            ...payload,
+            rate: payload.rating,
+            tag_ids: payload.tags.map(t => t.id), // если бек ждёт id-шники
+        });
         nav('/'); // к списку
     };
 
@@ -67,6 +73,14 @@ export default function CreateReview() {
                             setPayload({...payload, content: e.target.value})
                         }
                         required
+                    />
+                </label>
+
+                <label className="block">
+                    <span className="mb-1 inline-block">Теги</span>
+                    <TagSelector
+                        selected={payload.tags}
+                        onChange={tags => setPayload({...payload, tags})}
                     />
                 </label>
 

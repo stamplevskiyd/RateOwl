@@ -1,6 +1,7 @@
 import {Link} from 'react-router-dom';
 import dayjs from 'dayjs';
 import {ReviewRead} from '@/types';
+import TagBadge from '@/components/TagBadge';
 
 interface Props {
     review: ReviewRead
@@ -34,6 +35,11 @@ export default function ReviewCard({review}: Props) {
                 <p className="text-sm leading-relaxed text-gray-200">
                     {review.text /* название поля в OpenAPI — text */}
                 </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                    {review.tags.map(t => (
+                        <TagBadge key={t.id} tag={t}/>
+                    ))}
+                </div>
             </article>
         </Link>
     );

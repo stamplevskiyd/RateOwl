@@ -18,7 +18,7 @@ async def add_tag(tag: TagPost, tag_dao: TagDAODep) -> Tag:
     return tag
 
 
-@tags_router.post("/", response_model=list[TagGet])
+@tags_router.get("/", response_model=list[TagGet])
 async def get_tags(tag_dao: TagDAODep) -> list[Tag]:
     return await tag_dao.find_all()
 

@@ -9,7 +9,6 @@ class UserBase(BaseModel):
 
 
 class UserGet(UserBase):
-    model_config = ConfigDict(from_attributes=True)
     id: int
     active: bool
 

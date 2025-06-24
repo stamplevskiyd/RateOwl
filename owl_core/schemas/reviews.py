@@ -2,6 +2,7 @@ import datetime
 
 from pydantic import BaseModel, Field, ConfigDict
 
+from owl_core.schemas.tags import TagGet, TagPost
 from owl_core.schemas.titles import TitleGet
 from owl_core.schemas.users import UserGet
 
@@ -13,13 +14,17 @@ class ReviewBase(BaseModel):
 
 
 class ReviewGet(ReviewBase):
-    model_config = ConfigDict(from_attributes=True)
     id: int
     created_at: datetime.datetime
     updated_at: datetime.datetime
     title: TitleGet
     author: UserGet
+    tags: list[TagGet]
 
 
 class ReviewPost(ReviewBase):
     title_id: int
+    tags: list[TagPost] | None = None
+
+class ReviewPut(ReviewPost):
+    pass

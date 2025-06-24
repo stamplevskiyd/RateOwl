@@ -3,12 +3,14 @@ from typing import Annotated
 from fastapi import APIRouter, status, Depends, HTTPException
 
 from owl_core.api.users.dependencies import get_current_active_user
+from owl_core.commands.reviews.create_review_command import CreateReviewCommand
 from owl_core.daos.dependencies import get_dao_factory
 from owl_core.daos.review_dao import ReviewDAO
 from owl_core.daos.title_dao import TitleDAO
+from owl_core.db.session import SessionDep
 from owl_core.models.titles import Title
 from owl_core.models.users import User
-from owl_core.schemas.reviews import ReviewPost, ReviewGet
+from owl_core.schemas.reviews import ReviewPost, ReviewGet, ReviewPut
 
 reviews_router = APIRouter(prefix="/reviews", tags=["Rates"])
 
@@ -21,17 +23,11 @@ TitleDAODep = Annotated[TitleDAO, Depends(get_dao_factory(TitleDAO))]
 async def add_review(
     review: ReviewPost,
     current_user: Annotated[User, Depends(get_current_active_user)],
-    review_dao: ReviewDAODep,
-    title_dao: TitleDAODep,
+    session: SessionDep,
 ) -> ReviewGet:
     # DAOs use the same session due to the way fastapi handles deps
-    title: Title | None = await title_dao.find_by_id(review.title_id)
-    if title is None:
-        raise HTTPException(status_code=404, detail="Title not found")
-
-    created_review = await review_dao.create(
-        review.model_dump() | {"author_id": current_user.id}
-    )
+    command = CreateReviewCommand(review, current_user, session)
+    created_review = await command.run()
     # Default FastApi pydantic validation does now work with nested models
     return ReviewGet.model_validate(created_review, from_attributes=True)
 
@@ -50,3 +46,23 @@ async def get_review(review_id: int, review_dao: ReviewDAODep) -> ReviewGet:
     if not review:
         raise HTTPException(status_code=404, detail="Review not found")
     return ReviewGet.model_validate(review, from_attributes=True)
+
+@reviews_router.post("/{review_id}/update", status_code=status.HTTP_201_CREATED)
+async def add_review(
+    review_id: int,
+    review: ReviewPut,
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    review_dao: ReviewDAODep,
+    title_dao: TitleDAODep,
+) -> ReviewGet:
+    # TODO: move to commands!!!
+    # DAOs use the same session due to the way fastapi handles deps
+    title: Title | None = await title_dao.find_by_id(review.title_id)
+    if title is None:
+        raise HTTPException(status_code=404, detail="Title not found")
+
+    created_review = await review_dao.create(
+        review.model_dump() | {"author_id": current_user.id}
+    )
+    # Default FastApi pydantic validation does now work with nested models
+    return ReviewGet.model_validate(created_review, from_attributes=True)

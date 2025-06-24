@@ -4,6 +4,7 @@ import {useParams, Link} from 'react-router-dom';
 import dayjs from 'dayjs';
 import api from '@/api';
 import StarsStatic from '@/components/StarsStatic';
+import TagBadge from '@/components/TagBadge';
 import {ReviewRead} from '@/types';
 
 export default function ReviewDetails() {
@@ -46,6 +47,11 @@ export default function ReviewDetails() {
                 <p className="mt-4 whitespace-pre-line text-gray-200 leading-relaxed">
                     {data.text}
                 </p>
+                <div className="mt-6 flex flex-wrap gap-2">
+                    {data.tags.map(t => (
+                        <TagBadge key={t.id} tag={t}/>
+                    ))}
+                </div>
             </article>
         </main>
     );
