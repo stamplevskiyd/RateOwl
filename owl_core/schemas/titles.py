@@ -1,4 +1,6 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
+
+from owl_core.schemas.tags import TagGet
 
 
 class TitleBase(BaseModel):
@@ -7,7 +9,9 @@ class TitleBase(BaseModel):
 
 
 class TitleGet(TitleBase):
+    model_config = ConfigDict(from_attributes=True)
     id: int
+    tags: list[TagGet]
 
 
 class TitlePost(TitleBase):

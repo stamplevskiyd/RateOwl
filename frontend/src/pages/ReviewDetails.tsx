@@ -13,7 +13,7 @@ export default function ReviewDetails() {
 
     useEffect(() => {
         api
-            .get(`/v1/reviews/${id}`)
+            .get(`/api/v1/reviews/${id}`)
             .then(r => setData(r.data))
             .catch(() => setErr('Не удалось загрузить обзор'));
     }, [id]);

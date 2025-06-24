@@ -7,6 +7,6 @@ from owl_core.db.base import Base
 tags_to_titles = Table(
     "tags_to_titles",
     Base.metadata,
-    Column("tag_id", ForeignKey("tags.id")),
-    Column("title_id", ForeignKey("titles.id")),
+    Column("tag_id", ForeignKey("tags.id"), primary_key=True),
+    Column("title_id", ForeignKey("titles.id"), primary_key=True),
 )

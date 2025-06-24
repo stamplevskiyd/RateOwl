@@ -17,4 +17,6 @@ class Tag(Base, TimedMixin):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(index=True)
     slug: Mapped[str] = mapped_column(unique=True, index=True)
-    titles: Mapped[list["Title"]] = relationship(secondary=tags_to_titles)
+    titles: Mapped[list["Title"]] = relationship(
+        secondary=tags_to_titles, back_populates="tags", lazy="selectin"
+    )

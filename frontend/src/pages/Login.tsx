@@ -16,7 +16,7 @@ export default function Login() {
       const data = new URLSearchParams();
       data.append('username', username);
       data.append('password', password);
-      const res = await api.post('/v1/users/token', data);
+      const res = await api.post('/api/v1/users/token', data);
       login(res.data.access_token);
       navigate('/');
     } catch (err) {

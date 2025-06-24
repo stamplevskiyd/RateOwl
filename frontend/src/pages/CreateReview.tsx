@@ -14,12 +14,12 @@ export default function CreateReview() {
     });
 
     useEffect(() => {
-        api.get('/v1/titles/').then(r => setTitles(r.data));
+        api.get('/api/v1/titles/').then(r => setTitles(r.data));
     }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        await api.post('/v1/reviews/', payload);
+        await api.post('/api/v1/reviews/', payload);
         nav('/'); // к списку
     };
 

@@ -7,7 +7,7 @@ export default function Home() {
     const [reviews, setReviews] = useState<Review[]>([]);
 
     useEffect(() => {
-        api.get<Review[]>('/v1/reviews/').then((res) => setReviews(res.data));
+        api.get<Review[]>('/api/v1/reviews/').then((res) => setReviews(res.data));
     }, []);
 
     // frontend/src/pages/Home.tsx  (фрагмент)
