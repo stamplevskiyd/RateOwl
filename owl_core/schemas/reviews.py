@@ -1,6 +1,6 @@
 import datetime
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 from owl_core.schemas.titles import TitleGet
 from owl_core.schemas.users import UserGet
@@ -13,6 +13,7 @@ class ReviewBase(BaseModel):
 
 
 class ReviewGet(ReviewBase):
+    model_config = ConfigDict(from_attributes=True)
     id: int
     created_at: datetime.datetime
     updated_at: datetime.datetime

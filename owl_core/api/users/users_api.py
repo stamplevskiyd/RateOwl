@@ -2,7 +2,6 @@ from typing import Annotated
 
 from fastapi import APIRouter, status, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
-from pydantic import BaseModel
 
 from owl_core.api.users.dependencies import get_current_active_user
 from owl_core.api.users.utils import (

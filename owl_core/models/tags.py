@@ -7,21 +7,14 @@ from owl_core.models.association_tables import tags_to_titles
 from owl_core.models.mixins import TimedMixin
 
 if TYPE_CHECKING:
-    from owl_core.models.reviews import Review
-    from owl_core.models.tags import Tag
+    from owl_core.models.titles import Title
 
 
-class Title(Base, TimedMixin):
-    """Model for movie/tv series/game/so on"""
+class Tag(Base, TimedMixin):
+    """Model for review tag (media type)"""
 
-    __tablename__ = "titles"
+    __tablename__ = "tags"
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(index=True)
     slug: Mapped[str] = mapped_column(unique=True, index=True)
-    reviews: Mapped[list["Review"]] = relationship(
-        back_populates="title", lazy="selectin"
-    )
-    tags: Mapped[list["Tag"]] = relationship(secondary=tags_to_titles)
-
-    def __repr__(self) -> str:
-        return f"<Title({self.name})>"
+    titles: Mapped[list["Title"]] = relationship(secondary=tags_to_titles)
