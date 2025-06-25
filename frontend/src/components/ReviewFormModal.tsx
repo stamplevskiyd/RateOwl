@@ -1,7 +1,6 @@
 // src/components/ReviewFormModal.tsx
 import {useState} from 'react';
 import Modal from '@/components/Modal';
-import TagSelector from '@/components/TagSelector';
 import StarRating from '@/components/StarRating';
 import api from '@/api';
 import {ReviewRead, TagRead} from '@/types';
@@ -17,12 +16,12 @@ export default function ReviewFormModal({
 }) {
     const [form, setForm] = useState({
         title_id: review.title.id,
-        rating: review.rate,
+        rate: review.rate,
         text: review.text,
     });
 
     const save = async () => {
-        const { data } = await api.put(`/v1/reviews/${review.id}`, form);
+        const { data } = await api.put(`/api/v1/reviews/${review.id}`, form);
         onSave(data); // обновляем родителя
         onClose();
     };
@@ -32,8 +31,8 @@ export default function ReviewFormModal({
             <label className="mb-4 block">
                 <span className="mb-1 inline-block text-sm">Оценка</span>
                 <StarRating
-                    value={form.rating}
-                    onChange={v => setForm({...form, rating: v})}
+                    value={form.rate}
+                    onChange={v => setForm({...form, rate: v})}
                 />
             </label>
 
@@ -42,16 +41,8 @@ export default function ReviewFormModal({
                 <textarea
                     rows={5}
                     className="w-full resize-y rounded-md bg-zinc-700 p-2 text-gray-100"
-                    value={form.content}
-                    onChange={e => setForm({...form, content: e.target.value})}
-                />
-            </label>
-
-            <label className="mb-6 block">
-                <span className="mb-1 inline-block text-sm">Теги</span>
-                <TagSelector
-                    selected={form.tags}
-                    onChange={tags => setForm({...form, tags})}
+                    value={form.text}
+                    onChange={e => setForm({...form, text: e.target.value})}
                 />
             </label>
 

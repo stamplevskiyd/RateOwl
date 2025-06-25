@@ -1,12 +1,9 @@
-from fastapi import HTTPException
 from owl_core.commands.base_command import BaseCommand
 from owl_core.daos.tag_dao import TagDAO
 from owl_core.models.tags import Tag
 from owl_core.models.users import User
 from owl_core.schemas.tags import TagPost
 
-from owl_core.daos.tag_dao import TagDAO
-from owl_core.models.tags import Tag
 
 
 class UpdateTagCommand(BaseCommand):

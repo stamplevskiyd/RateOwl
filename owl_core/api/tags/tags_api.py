@@ -15,7 +15,10 @@ tags_router = APIRouter(prefix="/tags", tags=["Tags"])
 
 TagDAODep = Annotated[TagDAO, Depends(get_dao_factory(TagDAO))]
 
-@tags_router.get("/",)
+
+@tags_router.get(
+    "/",
+)
 async def get_tags(tag_dao: TagDAODep) -> list[TagGet]:
     tags = await tag_dao.find_all()
     return [TagGet.model_validate(tag, from_attributes=True) for tag in tags]
@@ -33,10 +36,11 @@ async def get_tag(tag_id: int, tags_dao: TagDAODep) -> TagGet:
 async def create_tag(
     tag: TagPost,
     current_user: Annotated[User, Depends(get_current_active_user)],
-    tag_dao: TagDAODep
+    tag_dao: TagDAODep,
 ) -> Tag:
     command = CreateTagCommand(tag, current_user, tag_dao)
     return await command.run()
+
 
 @tags_router.put("/{tag_id}", response_model=TagGet)
 async def update_tag(

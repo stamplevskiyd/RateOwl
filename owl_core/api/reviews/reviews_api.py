@@ -53,7 +53,7 @@ async def add_review(
     return ReviewGet.model_validate(created_review, from_attributes=True)
 
 
-@reviews_router.put("/{review_id}/update")
+@reviews_router.put("/{review_id}")
 async def edit_review(
     review_id: int,
     review: ReviewPut,

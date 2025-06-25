@@ -2,7 +2,7 @@ import datetime
 
 from pydantic import BaseModel, Field
 
-from owl_core.schemas.tags import TagGet, TagPost
+from owl_core.schemas.tags import TagGet
 from owl_core.schemas.titles import TitleGet
 from owl_core.schemas.users import UserGet
 
