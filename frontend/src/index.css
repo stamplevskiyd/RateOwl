@@ -8,3 +8,12 @@ body,
 #root {
     @apply h-full bg-canvas text-gray-100;
 }
+
+.btn-primary {
+  @apply rounded bg-spruce-600 px-4 py-1.5 text-gray-100
+         transition-colors hover:bg-spruce-700 disabled:opacity-50;
+}
+.btn-icon {
+  @apply rounded bg-zinc-700/50 p-1 text-gray-300 transition
+         hover:bg-zinc-600 hover:text-gray-100;
+}
