@@ -9,6 +9,7 @@ import TitleList from '@/pages/TitleList';
 import TagList from '@/pages/TagList';
 import Profile from '@/pages/Profile';
 import SignUp from '@/pages/SignUp';
+import TitleDetails from '@/pages/TitleDetails';
 
 function ProtectedRoute({children}: { children: JSX.Element }) {
     const {token} = useAuth();
@@ -39,6 +40,7 @@ export default function App() {
                     <Route path="/tags" element={<TagList />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/signup" element={<SignUp />} />
+                    <Route path="/titles/:id" element={<TitleDetails />} />
                 </Routes>
             </div>
         </AuthProvider>

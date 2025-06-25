@@ -14,4 +14,4 @@ class TitleGet(TitleBase):
 
 
 class TitlePost(TitleBase):
-    pass
+    tag_ids: list[int]

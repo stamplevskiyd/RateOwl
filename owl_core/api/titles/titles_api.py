@@ -17,9 +17,9 @@ async def get_titles(title_dao: TitleDAODep) -> list[Title]:
     return await title_dao.find_all()
 
 
-@titles_router.get("/{title}", response_model=TitleGet)
-async def get_title_by_id(title: str, title_dao: TitleDAODep) -> Title:
-    title_obj: Title | None = await title_dao.find_one_filtered(Title.slug == title)
+@titles_router.get("/{title_id}", response_model=TitleGet)
+async def get_title(title_id: int, title_dao: TitleDAODep) -> Title:
+    title_obj: Title | None = await title_dao.find_by_id(title_id)
     if title_obj is None:
         raise HTTPException(status_code=404, detail="Title not found")
     return title_obj

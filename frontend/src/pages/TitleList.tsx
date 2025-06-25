@@ -1,48 +1,77 @@
-// src/pages/TitleList.tsx
+// frontend/src/pages/TitleList.tsx
 import {useEffect, useState} from 'react';
 import api from '@/api';
+
 import {TitleRead} from '@/types';
-import TagBadge from '@/components/TagBadge';
+import TitleCard from '@/components/TitleCard';
 import TitleForm from '@/components/TitleForm';
+import TitleFormModal from '@/components/TitleFormModal';
 
 export default function TitleList() {
     const [items, setItems] = useState<TitleRead[]>([]);
-    const [showForm, setShowForm] = useState(false);
+    const [showCreate, setShowCreate] = useState(false);
+    const [editing, setEditing] = useState<TitleRead | null>(null);
 
+    /** ─── безопасная загрузка списка ─── */
     useEffect(() => {
-        api.get('/api/v1/titles/').then(r => setItems(r.data));
+        let cancelled = false;
+
+        (async () => {
+            try {
+                const {data} = await api.get<TitleRead[]>('/api/v1/titles');
+                if (!cancelled) setItems(data);
+            } catch (e) {
+                console.error(e);
+            }
+        })();
+
+        return () => {
+            cancelled = true; // отменяем setState после размонтирования
+        };
     }, []);
 
+    /** ─── CRUD-колбэки ─── */
+    const add = (t: TitleRead) => setItems(prev => [...prev, t]);
+    const replace = (t: TitleRead) =>
+        setItems(prev => prev.map(p => (p.id === t.id ? t : p)));
+    const remove = (id: number) =>
+        setItems(prev => prev.filter(t => t.id !== id));
+
     return (
-        <main className="mx-auto mt-6 w-full max-w-4xl px-4 pb-16">
-            <div className="mb-4 flex items-center justify-between">
+        <main className="mx-auto mt-6 w-full max-w-4xl px-4 pb-24">
+            <div className="mb-6 flex items-center justify-between">
                 <h2 className="text-xl font-semibold text-gray-100">Медиа</h2>
+
                 <button
-                    onClick={() => setShowForm(true)}
+                    onClick={() => setShowCreate(true)}
                     className="rounded-md bg-spruce-500 px-3 py-1.5 text-sm text-gray-100 hover:bg-spruce-600">
                     + Медиа
                 </button>
             </div>
 
-            <div className="space-y-4">
+            {/* карточки с увеличенным интервалом */}
+            <div className="flex flex-col gap-8 px-2 sm:px-0">
                 {items.map(t => (
-                    <div key={t.id} className="rounded-lg border border-zinc-700 p-4">
-                        <h3 className="font-medium text-gray-100">{t.name}</h3>
-                        <div className="mt-1 flex flex-wrap gap-2">
-                            {t.tags.map(tag => (
-                                <TagBadge key={tag.id} tag={tag}/>
-                            ))}
-                        </div>
-                    </div>
+                    <TitleCard
+                        key={t.id}
+                        item={t}
+                        onRemove={remove}
+                        onEdit={setEditing}
+                    />
                 ))}
             </div>
 
-            {showForm && (
-                <TitleForm
-                    onClose={() => {
-                        setShowForm(false);
-                        load();
-                    }}
+            {/* создание */}
+            {showCreate && (
+                <TitleForm onClose={() => setShowCreate(false)} onAdd={add}/>
+            )}
+
+            {/* редактирование */}
+            {editing && (
+                <TitleFormModal
+                    title={editing}
+                    onClose={() => setEditing(null)}
+                    onSave={replace}
                 />
             )}
         </main>
