@@ -12,7 +12,7 @@ export default function SignUp() {
     const submit = async (e: FormEvent) => {
         e.preventDefault();
         // 1) создаём пользователя
-        await api.post('/v1/users/', form);
+        await api.post('api/v1/users/', form);
         // 2) сразу логинимся через AuthContext
         await login(form);
         nav('/');

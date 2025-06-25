@@ -12,11 +12,12 @@ from owl_core.models.reviews import Review
 from owl_core.models.users import User
 from owl_core.schemas.reviews import ReviewPost, ReviewGet, ReviewPut
 
-reviews_router = APIRouter(prefix="/reviews", tags=["Rates"])
+reviews_router = APIRouter(prefix="/reviews", tags=["Reviews"])
 
 
 ReviewDAODep = Annotated[ReviewDAO, Depends(get_dao_factory(ReviewDAO))]
 TitleDAODep = Annotated[TitleDAO, Depends(get_dao_factory(TitleDAO))]
+
 
 @reviews_router.get("/")
 async def get_reviews(review_dao: ReviewDAODep) -> list[ReviewGet]:
@@ -50,6 +51,7 @@ async def add_review(
     created_review = await command.run()
     # Default FastApi pydantic validation does now work with nested models
     return ReviewGet.model_validate(created_review, from_attributes=True)
+
 
 @reviews_router.put("/{review_id}/update")
 async def edit_review(

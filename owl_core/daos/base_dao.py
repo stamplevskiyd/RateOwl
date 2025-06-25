@@ -46,10 +46,14 @@ class BaseDAO[T]:
         return obj
 
     async def find_by_id(self, pk: int) -> T | None:
-        # TODO: move to get by pk?
         query = select(self.model_cls).where(self.model_cls.id == pk)
         result = await self.session.execute(query)
         return result.scalars().one_or_none()
+
+    async def find_by_ids(self, ids: list[int]) -> list[T]:
+        query = select(self.model_cls).where(self.model_cls.id.in_(ids))
+        result = await self.session.execute(query)
+        return list(result.scalars().all())
 
     async def find_all(self) -> list[T]:
         query = select(self.model_cls)

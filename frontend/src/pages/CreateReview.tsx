@@ -1,6 +1,5 @@
 import {useEffect, useState} from 'react';
 import StarRating from '@/components/StarRating';
-import TagSelector from '@/components/TagSelector';
 import api from '@/api';
 import {TitleRead, ReviewCreate} from '@/types';
 import {useNavigate} from 'react-router-dom';
@@ -10,9 +9,8 @@ export default function CreateReview() {
     const [titles, setTitles] = useState<TitleRead[]>([]);
     const [payload, setPayload] = useState<ReviewCreate>({
         title_id: '',
-        rating: 5,
-        content: '',
-        tags: [] as TagRead[],
+        rate: 7,
+        text: '',
     });
 
     useEffect(() => {
@@ -21,11 +19,7 @@ export default function CreateReview() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        await api.post('api/v1/reviews/add', {
-            ...payload,
-            rate: payload.rating,
-            tag_ids: payload.tags.map(t => t.id), // если бек ждёт id-шники
-        });
+        await api.post('api/v1/reviews/add', payload);
         nav('/'); // к списку
     };
 
@@ -58,8 +52,8 @@ export default function CreateReview() {
                 <label className="block">
                     <span className="mb-1 inline-block">Оценка</span>
                     <StarRating
-                        value={payload.rating}
-                        onChange={v => setPayload({...payload, rating: v})}
+                        value={payload.rate}
+                        onChange={v => setPayload({...payload, rate: v})}
                     />
                 </label>
 
@@ -68,19 +62,11 @@ export default function CreateReview() {
                     <textarea
                         rows={4}
                         className="block w-full resize-y rounded-md bg-zinc-700 p-2"
-                        value={payload.content}
+                        value={payload.text}
                         onChange={e =>
-                            setPayload({...payload, content: e.target.value})
+                            setPayload({...payload, text: e.target.value})
                         }
                         required
-                    />
-                </label>
-
-                <label className="block">
-                    <span className="mb-1 inline-block">Теги</span>
-                    <TagSelector
-                        selected={payload.tags}
-                        onChange={tags => setPayload({...payload, tags})}
                     />
                 </label>
 

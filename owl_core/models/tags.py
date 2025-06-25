@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 
 from owl_core.db.base import Base
@@ -8,6 +9,7 @@ from owl_core.models.mixins import TimedMixin
 
 if TYPE_CHECKING:
     from owl_core.models.titles import Title
+    from owl_core.models.users import User
 
 
 class Tag(Base, TimedMixin):
@@ -16,7 +18,8 @@ class Tag(Base, TimedMixin):
     __tablename__ = "tags"
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(index=True)
-    slug: Mapped[str] = mapped_column(unique=True, index=True)
     titles: Mapped[list["Title"]] = relationship(
         secondary=tags_to_titles, back_populates="tags", lazy="selectin"
     )
+    author_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"))
+    author: Mapped["User"] = relationship(back_populates="tags", lazy="selectin")

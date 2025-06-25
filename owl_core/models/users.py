@@ -7,6 +7,8 @@ from owl_core.models.mixins import TimedMixin
 
 if TYPE_CHECKING:
     from owl_core.models.reviews import Review
+    from owl_core.models.titles import Title
+    from owl_core.models.tags import Tag
 
 
 class User(Base, TimedMixin):
@@ -24,6 +26,10 @@ class User(Base, TimedMixin):
     reviews: Mapped[list["Review"]] = relationship(
         back_populates="author", lazy="selectin"
     )
+    titles: Mapped[list["Title"]] = relationship(
+        back_populates="author", lazy="selectin"
+    )
+    tags: Mapped[list["Tag"]] = relationship(back_populates="author", lazy="selectin")
 
     def __repr__(self) -> str:
         return f"<User({self.username})>"

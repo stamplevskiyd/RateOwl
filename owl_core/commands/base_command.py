@@ -7,7 +7,6 @@ T = TypeVar("T", bound=Base)
 
 
 class BaseCommand(ABC):
-
     @abstractmethod
     async def validate(self) -> None:
         """Check if data is valid"""

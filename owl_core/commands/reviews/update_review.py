@@ -1,16 +1,20 @@
 from fastapi import HTTPException
-from owl_core.commands.base_command import BaseCommand, T
-from owl_core.daos import review_dao
+from owl_core.commands.base_command import BaseCommand
 from owl_core.daos.review_dao import ReviewDAO
 from owl_core.daos.title_dao import TitleDAO
 from owl_core.models.reviews import Review
 from owl_core.models.titles import Title
-from owl_core.models.users import User
-from owl_core.schemas.reviews import ReviewPost, ReviewPut
+from owl_core.schemas.reviews import ReviewPut
 
 
 class UpdateReviewCommand(BaseCommand):
-    def __init__(self, review_object: Review, review: ReviewPut, title_dao: TitleDAO, review_dao: ReviewDAO):
+    def __init__(
+        self,
+        review_object: Review,
+        review: ReviewPut,
+        title_dao: TitleDAO,
+        review_dao: ReviewDAO,
+    ):
         self._review = review
         self._review_object = review_object
         self._title_dao = title_dao
@@ -23,7 +27,7 @@ class UpdateReviewCommand(BaseCommand):
 
     async def run(self) -> Review:
         await self.validate()
-        updated_review = await review_dao.update(
-            self._review.model_dump()
+        updated_review = await self._review_dao.update(
+            self._review_object, self._review.model_dump()
         )
         return updated_review

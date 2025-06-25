@@ -18,16 +18,15 @@ class Review(Base, TimedMixin):
     __tablename__ = "reviews"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    description: Mapped[str]
     text: Mapped[str] = mapped_column(Text)
     rate: Mapped[int]
-    author_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    author_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"))
     author: Mapped["User"] = relationship(back_populates="reviews", lazy="selectin")
-    title_id: Mapped[int] = mapped_column(ForeignKey("titles.id"))
+    title_id: Mapped[int] = mapped_column(ForeignKey("titles.id", ondelete="SET NULL"))
     title: Mapped["Title"] = relationship(back_populates="reviews", lazy="selectin")
 
-    def __repr__(self) -> str:
-        return f"<Review({self.description})>"
+    # def __repr__(self) -> str:
+    #     return f"<Review({self.description})>"
 
     @property
     def tags(self) -> list["Tag"]:

@@ -50,7 +50,7 @@ export default function TitleList() {
             </div>
 
             {/* карточки с увеличенным интервалом */}
-            <div className="flex flex-col gap-8 px-2 sm:px-0">
+            <div className="flex flex-col gap-4 px-2 sm:px-0">
                 {items.map(t => (
                     <TitleCard
                         key={t.id}

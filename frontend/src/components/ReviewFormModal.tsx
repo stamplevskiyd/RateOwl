@@ -18,15 +18,11 @@ export default function ReviewFormModal({
     const [form, setForm] = useState({
         title_id: review.title.id,
         rating: review.rate,
-        content: review.text,
-        tags: review.tags as TagRead[],
+        text: review.text,
     });
 
     const save = async () => {
-        const {data} = await api.put<ReviewRead>(`/v1/reviews/${review.id}`, {
-            ...form,
-            tag_ids: form.tags.map(t => t.id),
-        });
+        const { data } = await api.put(`/v1/reviews/${review.id}`, form);
         onSave(data); // обновляем родителя
         onClose();
     };

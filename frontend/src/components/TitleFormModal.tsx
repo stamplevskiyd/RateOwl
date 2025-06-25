@@ -20,7 +20,7 @@ export default function TitleFormModal({
     const save = async () => {
         const {data} = await api.put<TitleRead>(`/api/v1/titles/${title.id}`, {
             name,
-            tag_ids: tags.map(t => t.id),
+            tags: tags.map(t => t.id),
         });
         onSave(data);
         onClose();
