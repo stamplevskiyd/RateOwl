@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 
 from owl_core.schemas.tags import TagGet
+from owl_core.schemas.users import UserGet
 
 
 class TitleBase(BaseModel):
@@ -10,6 +11,7 @@ class TitleBase(BaseModel):
 class TitleGet(TitleBase):
     id: int
     tags: list[TagGet]
+    author: UserGet
 
 
 class TitlePost(TitleBase):

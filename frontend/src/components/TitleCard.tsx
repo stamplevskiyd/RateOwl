@@ -1,9 +1,9 @@
-// src/components/TitleCard.tsx
-import TagBadge from '@/components/TagBadge';
 import {TitleRead} from '@/types';
 import {Edit3, Trash2} from 'lucide-react';
-import api from '@/api';
 import {Link} from 'react-router-dom';
+import {useAuth} from '@/context/AuthContext';
+import api from '@/api';
+import TagBadge from '@/components/TagBadge';
 
 export default function TitleCard({
                                       item,
@@ -14,10 +14,16 @@ export default function TitleCard({
     onRemove: (id: number) => void;
     onEdit: (t: TitleRead) => void;
 }) {
+    const {user} = useAuth();
+    const isMine = user?.id === item.author.id; // ← проверяем автора
+
     const del = async () => {
         if (!confirm('Удалить медиа?')) return;
-        await api.delete(`/api/v1/titles/${item.id}`);
-        onRemove(item.id);
+        try {
+            await api.delete(`/v1/titles/${item.id}`);
+            onRemove(item.id);
+        } catch {/* ошибку покажет интерцептор */
+        }
     };
 
     return (
@@ -31,14 +37,16 @@ export default function TitleCard({
                     {item.name}
                 </Link>
 
-                <div className="flex gap-2">
-                    <button onClick={() => onEdit(item)} className="btn-icon">
-                        <Edit3 size={16}/>
-                    </button>
-                    <button onClick={del} className="btn-icon">
-                        <Trash2 size={16}/>
-                    </button>
-                </div>
+                {isMine && (
+                    <div className="flex gap-2">
+                        <button onClick={() => onEdit(item)} className="btn-icon" title="Редактировать">
+                            <Edit3 size={16}/>
+                        </button>
+                        <button onClick={del} className="btn-icon" title="Удалить">
+                            <Trash2 size={16}/>
+                        </button>
+                    </div>
+                )}
             </div>
 
             <div className="mt-3 flex flex-wrap gap-2">

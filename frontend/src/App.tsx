@@ -25,14 +25,7 @@ export default function App() {
             <Navbar/>
             <div className="container mx-auto mt-4">
                 <Routes>
-                    <Route
-                        path="/"
-                        element={
-                            <ProtectedRoute>
-                                <Home/>
-                            </ProtectedRoute>
-                        }
-                    />
+                    <Route path="/" element={<Home/>}/>
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/create" element={<CreateReview/>}/>
                     <Route path="/reviews/:id" element={<ReviewDetails />} />
