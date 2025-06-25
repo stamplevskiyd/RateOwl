@@ -1,39 +1,57 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+// frontend/src/context/AuthContext.tsx
+import {createContext, useContext, useEffect, useState} from 'react';
+import api from '@/api';
+import {UserRead} from '@/types';
 
-interface AuthContextType {
-  token: string | null;
-  login: (t: string) => void;
-  logout: () => void;
+interface AuthCtx {
+    user: UserRead | null;
+    token: string | null;          // ①
+    loading: boolean;              // ② холостой период в начале
+    login: (creds: { username: string; password: string }) => Promise<void>;
+    logout: () => void;
 }
 
-const AuthContext = createContext<AuthContextType>({
-  token: null,
-  login: () => {},
-  logout: () => {},
-});
+const Ctx = createContext<AuthCtx>(null!);
+export const useAuth = () => useContext(Ctx);
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [token, setToken] = useState<string | null>(() => localStorage.getItem('token'));
+export function AuthProvider({children}: React.PropsWithChildren) {
+    const [user, setUser] = useState<UserRead | null>(null);
+    const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
+    const [loading, setLoading] = useState(true);
 
-  const login = (t: string) => {
-    localStorage.setItem('token', t);
-    setToken(t);
-  };
+    /** ───── Проверяем токен при первом рендере ───── */
+    useEffect(() => {
+        if (!token) {
+            setLoading(false);
+            return;
+        }
+        api.get<UserRead>('api/v1/users/me')
+            .then(r => setUser(r.data))
+            .finally(() => setLoading(false));
+    }, [token]);
 
-  const logout = () => {
-    localStorage.removeItem('token');
-    setToken(null);
-  };
+    /** ───── Авторизация ───── */
+    const login = async ({username, password}) => {
+        const {data} = await api.post<{ access_token: string }>(
+            'api/v1/users/token',
+            new URLSearchParams({username, password}),
+        );
+        localStorage.setItem('token', data.access_token);
+        setToken(data.access_token);
+        const me = await api.get<UserRead>('api/v1/users/me');
+        setUser(me.data);                          // ←  сразу имя
+    };
 
-  useEffect(() => {
-    // Could validate token here
-  }, []);
+    /** ───── Выход ───── */
+    const logout = () => {
+        localStorage.removeItem('token');
+        setUser(null);
+    };
 
-  return (
-    <AuthContext.Provider value={{ token, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
 
-export const useAuth = () => useContext(AuthContext);
+    return (
+        <Ctx.Provider value={{user, token, loading, login, logout}}>
+            {children}
+        </Ctx.Provider>
+    );
+}

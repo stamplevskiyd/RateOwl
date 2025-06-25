@@ -41,7 +41,7 @@ export default function TagList() {
                 <button
                     className="rounded-md bg-spruce-500 px-3 py-1.5 text-sm text-gray-100 hover:bg-spruce-600"
                     onClick={() => setShow(true)}>
-                    Тег
+                     + Тег
                 </button>
             </div>
 

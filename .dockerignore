@@ -87,6 +87,3 @@ venv/
 
 # VS Code
 .vscode/
-
-# Owl core
-app/

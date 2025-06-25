@@ -1,16 +1,21 @@
+// src/pages/SignUp.tsx
 import {FormEvent, useState} from 'react';
-import {useNavigate, Link} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
+import api from '@/api';
 import {useAuth} from '@/context/AuthContext';
 
-export default function Login() {
-    const {login} = useAuth();
+export default function SignUp() {
     const nav = useNavigate();
+    const {login} = useAuth();
     const [form, setForm] = useState({username: '', password: ''});
 
     const submit = async (e: FormEvent) => {
         e.preventDefault();
+        // 1) создаём пользователя
+        await api.post('/v1/users/', form);
+        // 2) сразу логинимся через AuthContext
         await login(form);
-        nav('/');                      // ← после успешного логина домой
+        nav('/');
     };
 
     return (
@@ -19,16 +24,14 @@ export default function Login() {
                 onSubmit={submit}
                 className="w-full max-w-sm rounded-xl border border-zinc-700
                    bg-surface p-8 shadow-xl">
-                <h1 className="mb-6 text-2xl font-bold text-gray-100">Вход</h1>
+                <h1 className="mb-6 text-2xl font-bold text-gray-100">Регистрация</h1>
 
                 <label className="mb-4 block">
                     <span className="mb-1 block text-sm text-gray-300">Логин</span>
                     <input
-                        className="w-full rounded-md bg-zinc-700 p-2 text-gray-100
-                       placeholder:text-zinc-400 focus:outline-none"
+                        className="w-full rounded-md bg-zinc-700 p-2 text-gray-100"
                         value={form.username}
                         onChange={e => setForm({...form, username: e.target.value})}
-                        placeholder="username"
                     />
                 </label>
 
@@ -36,28 +39,18 @@ export default function Login() {
                     <span className="mb-1 block text-sm text-gray-300">Пароль</span>
                     <input
                         type="password"
-                        className="w-full rounded-md bg-zinc-700 p-2 text-gray-100
-                       placeholder:text-zinc-400 focus:outline-none"
+                        className="w-full rounded-md bg-zinc-700 p-2 text-gray-100"
                         value={form.password}
                         onChange={e => setForm({...form, password: e.target.value})}
-                        placeholder="•••••••"
                     />
                 </label>
 
                 <button
                     disabled={!form.username || !form.password}
-                    className="mb-3 w-full rounded-md bg-spruce-600 px-4 py-2
-                     text-sm font-semibold text-gray-100 transition-colors
-                     hover:bg-spruce-700 disabled:opacity-50">
-                    Войти
+                    className="w-full rounded-md bg-spruce-600 px-4 py-2 text-sm
+                     font-semibold text-gray-100 transition-colors hover:bg-spruce-700">
+                    Создать
                 </button>
-
-                <p className="text-center text-xs text-zinc-400">
-                    Нет учетной записи?{' '}
-                    <Link className="text-spruce-400 hover:underline" to="/signup">
-                        Регистрация
-                    </Link>
-                </p>
             </form>
         </main>
     );
