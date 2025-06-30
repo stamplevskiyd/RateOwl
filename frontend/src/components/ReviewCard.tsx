@@ -24,7 +24,7 @@ export default function ReviewCard({review, onRemove, onEdit}: Props) {
     /* удаляем обзор и уведомляем родителя */
     const handleDelete = async () => {
         if (!confirm('Удалить этот обзор?')) return;
-        await api.delete(`/v1/reviews/${review.id}`);
+        await api.delete(`api/v1/reviews/${review.id}`);
         onRemove?.(review.id);
     };
 

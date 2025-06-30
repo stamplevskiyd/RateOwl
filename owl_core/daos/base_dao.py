@@ -42,7 +42,6 @@ class BaseDAO[T]:
         await self.session.delete(obj)
         if commit:
             await self.session.commit()
-        await self.session.refresh(obj)
         return obj
 
     async def find_by_id(self, pk: int) -> T | None:

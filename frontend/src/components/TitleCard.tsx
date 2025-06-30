@@ -20,7 +20,7 @@ export default function TitleCard({
     const del = async () => {
         if (!confirm('Удалить медиа?')) return;
         try {
-            await api.delete(`/v1/titles/${item.id}`);
+            await api.delete(`api/v1/titles/${item.id}`);
             onRemove(item.id);
         } catch {/* ошибку покажет интерцептор */
         }

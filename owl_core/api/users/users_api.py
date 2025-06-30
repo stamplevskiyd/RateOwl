@@ -20,12 +20,12 @@ users_router = APIRouter(prefix="/users", tags=["Users"])
 UserDAODep = Annotated[UserDAO, Depends(get_dao_factory(UserDAO))]
 
 
-# TODO: this is not an api. move to views or somewhere else
 @users_router.post("/token")
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()], user_dao: UserDAODep
 ) -> Token:
     """Login by access token"""
+    # TODO: this is not an api. move to views or somewhere else
     user: User | None = await authenticate_user(
         form_data.username, form_data.password, user_dao
     )
@@ -57,3 +57,4 @@ async def get_current_user_me(
     current_user: Annotated[User, Depends(get_current_active_user)],
 ) -> User:
     return current_user
+

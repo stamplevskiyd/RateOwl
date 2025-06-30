@@ -15,6 +15,11 @@ tags_router = APIRouter(prefix="/tags", tags=["Tags"])
 
 TagDAODep = Annotated[TagDAO, Depends(get_dao_factory(TagDAO))]
 
+NotFoundError = HTTPException(status_code=404, detail="Tag not found")
+ForbiddenError = HTTPException(
+    status_code=403, detail="You can only edit or delete your own tags"
+)
+
 
 @tags_router.get(
     "/",
@@ -28,7 +33,7 @@ async def get_tags(tag_dao: TagDAODep) -> list[TagGet]:
 async def get_tag(tag_id: int, tags_dao: TagDAODep) -> TagGet:
     tag = await tags_dao.find_by_id(tag_id)
     if not tag:
-        raise HTTPException(status_code=404, detail="Tag not found")
+        raise NotFoundError
     return TagGet.model_validate(tag, from_attributes=True)
 
 
@@ -52,11 +57,33 @@ async def update_tag(
     tag_object: Tag | None = await tag_dao.find_by_id(tag_id)
 
     if tag_object is None:
-        raise HTTPException(status_code=404, detail="Tag not found")
+        raise NotFoundError
 
     if tag_object.author != current_user:
-        raise HTTPException(status_code=403, detail="You can only edit your own tags")
+        raise ForbiddenError
 
     command = UpdateTagCommand(tag_object, tag, current_user, tag_dao)
     updated_tag = await command.run()
     return updated_tag
+
+
+@tags_router.delete("/{tag_id}", response_model=TagGet)
+async def delete_tag(
+    tag_id: int,
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    tag_dao: TagDAODep,
+) -> Tag:
+    tag_object: Tag | None = await tag_dao.find_by_id(tag_id)
+
+    if tag_object is None:
+        raise NotFoundError
+
+    if tag_object.author != current_user:
+        raise ForbiddenError
+
+    if tag_object.titles:
+        raise HTTPException(
+            status_code=422, detail="You can not delete tags that have active titles"
+        )
+
+    return await tag_dao.delete(tag_object)

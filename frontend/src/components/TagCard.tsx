@@ -18,7 +18,7 @@ export default function TagCard({
     const del = async () => {
         if (!confirm('Удалить тег?')) return;
         try {
-            await api.delete(`/v1/tags/${tag.id}`);
+            await api.delete(`api/v1/tags/${tag.id}`);
             onRemove(tag.id);
         } catch {/* pushError сработает в интерцепторе */
         }

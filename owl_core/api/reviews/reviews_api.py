@@ -18,6 +18,11 @@ reviews_router = APIRouter(prefix="/reviews", tags=["Reviews"])
 ReviewDAODep = Annotated[ReviewDAO, Depends(get_dao_factory(ReviewDAO))]
 TitleDAODep = Annotated[TitleDAO, Depends(get_dao_factory(TitleDAO))]
 
+NotFoundError = HTTPException(status_code=404, detail="Review not found")
+ForbiddenError = HTTPException(
+    status_code=403, detail="You can only edit or delete your own reviews"
+)
+
 
 @reviews_router.get("/")
 async def get_reviews(review_dao: ReviewDAODep) -> list[ReviewGet]:
@@ -65,13 +70,30 @@ async def edit_review(
     review_object: Review | None = await review_dao.find_by_id(review_id)
 
     if review_object is None:
-        raise HTTPException(status_code=404, detail="Review not found")
+        raise NotFoundError
 
     if review_object.author != current_user:
-        raise HTTPException(
-            status_code=403, detail="You can only edit your own reviews"
-        )
+        raise ForbiddenError
 
     command = UpdateReviewCommand(review_object, review, title_dao, review_dao)
     updated_review = await command.run()
     return ReviewGet.model_validate(updated_review, from_attributes=True)
+
+
+@reviews_router.delete("/{review_id}")
+async def delete_review(
+    review_id: int,
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    review_dao: ReviewDAODep,
+) -> ReviewGet:
+    """Update review"""
+    review_object: Review | None = await review_dao.find_by_id(review_id)
+
+    if review_object is None:
+        raise NotFoundError
+
+    if review_object.author != current_user:
+        raise ForbiddenError
+
+    deleted_review = await review_dao.delete(review_object)
+    return ReviewGet.model_validate(deleted_review, from_attributes=True)
