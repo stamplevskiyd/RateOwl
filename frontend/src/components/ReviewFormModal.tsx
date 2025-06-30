@@ -15,9 +15,9 @@ export default function ReviewFormModal({
     onSave: (r: ReviewRead) => void;
 }) {
     const [form, setForm] = useState({
-        title_id: review.title.id,
         rate: review.rate,
         text: review.text,
+        hidden: review.hidden,
     });
 
     const save = async () => {
@@ -44,6 +44,15 @@ export default function ReviewFormModal({
                     value={form.text}
                     onChange={e => setForm({...form, text: e.target.value})}
                 />
+            </label>
+
+            <label className="mb-6 flex items-center gap-2">
+                <input
+                    type="checkbox"
+                    checked={form.hidden}
+                    onChange={e => setForm({...form, hidden: e.target.checked})}
+                />
+                <span className="text-sm text-gray-200"> Обзор виден только&nbsp;мне</span>
             </label>
 
             <div className="flex justify-end gap-3">

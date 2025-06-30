@@ -24,6 +24,7 @@ class Review(Base, TimedMixin):
     author: Mapped["User"] = relationship(back_populates="reviews", lazy="selectin")
     title_id: Mapped[int] = mapped_column(ForeignKey("titles.id", ondelete="SET NULL"))
     title: Mapped["Title"] = relationship(back_populates="reviews", lazy="selectin")
+    hidden: Mapped[bool] = mapped_column(default=False, server_default="false")
 
     # def __repr__(self) -> str:
     #     return f"<Review({self.description})>"

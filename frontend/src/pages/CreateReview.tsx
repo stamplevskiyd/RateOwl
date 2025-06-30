@@ -11,6 +11,7 @@ export default function CreateReview() {
         title_id: '',
         rate: 7,
         text: '',
+        hidden: false
     });
 
     useEffect(() => {
@@ -30,7 +31,7 @@ export default function CreateReview() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
                 <label className="block">
-                    <span className="mb-1 inline-block">Заголовок</span>
+                    <span className="mb-1 inline-block">Медиа</span>
                     <select
                         className="block w-full rounded-md bg-zinc-700 p-2"
                         value={payload.title_id}
@@ -69,6 +70,15 @@ export default function CreateReview() {
                         required
                     />
                 </label>
+
+                <label className="mb-6 flex items-center gap-2">
+                <input
+                    type="checkbox"
+                    checked={payload.hidden}
+                    onChange={e => setPayload({...payload, hidden: e.target.checked})}
+                />
+                <span className="text-sm text-gray-200"> Обзор виден только&nbsp;мне</span>
+            </label>
 
                 <button
                     type="submit"

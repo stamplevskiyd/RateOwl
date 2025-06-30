@@ -3,7 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, status, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 
-from owl_core.api.users.dependencies import get_current_active_user
+from owl_core.api.users.dependencies import get_active_user
 from owl_core.api.users.utils import (
     authenticate_user,
     create_access_token,
@@ -53,8 +53,7 @@ async def get_users(user_dao: UserDAODep) -> list[User]:
 
 
 @users_router.get("/me", response_model=UserGet)
-async def get_current_user_me(
-    current_user: Annotated[User, Depends(get_current_active_user)],
+async def get_user_me(
+    current_user: Annotated[User, Depends(get_active_user)],
 ) -> User:
     return current_user
-

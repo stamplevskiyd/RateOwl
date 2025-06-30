@@ -2,7 +2,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException
 
-from owl_core.api.users.dependencies import get_current_active_user
+from owl_core.api.users.dependencies import get_active_user
 from owl_core.commands.titles.create_title import CreateTitleCommand
 from owl_core.commands.titles.update_title import UpdateTitleCommand
 from owl_core.daos.dependencies import get_dao_factory
@@ -39,7 +39,7 @@ async def get_title(title_id: int, title_dao: TitleDAODep) -> Title:
 @titles_router.post("/add", response_model=TitleGet)
 async def create_title(
     title: TitlePost,
-    current_user: Annotated[User, Depends(get_current_active_user)],
+    current_user: Annotated[User, Depends(get_active_user)],
     title_dao: TitleDAODep,
     tag_dao: TagDAODep,
 ) -> Title:
@@ -51,7 +51,7 @@ async def create_title(
 async def update_title(
     title_id: int,
     title: TitlePost,
-    current_user: Annotated[User, Depends(get_current_active_user)],
+    current_user: Annotated[User, Depends(get_active_user)],
     title_dao: TitleDAODep,
     tag_dao: TagDAODep,
 ) -> Title:
@@ -71,7 +71,7 @@ async def update_title(
 @titles_router.delete("/{title_id}", response_model=TitleGet)
 async def delete_title(
     title_id: int,
-    current_user: Annotated[User, Depends(get_current_active_user)],
+    current_user: Annotated[User, Depends(get_active_user)],
     title_dao: TitleDAODep,
 ) -> Title:
     title_object: Title | None = await title_dao.find_by_id(title_id)

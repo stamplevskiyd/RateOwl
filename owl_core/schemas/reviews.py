@@ -11,6 +11,7 @@ class ReviewBase(BaseModel):
     # description: str = Field(min_length=1, max_length=255)
     text: str
     rate: int = Field(ge=1, le=10)
+    hidden: bool = False
 
 
 class ReviewGet(ReviewBase):
@@ -26,5 +27,5 @@ class ReviewPost(ReviewBase):
     title_id: int
 
 
-class ReviewPut(ReviewPost):
+class ReviewPut(ReviewBase):
     pass

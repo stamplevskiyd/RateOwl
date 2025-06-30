@@ -13,7 +13,7 @@ from owl_core.models.users import User
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/v1/users/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/v1/users/token", auto_error=False)
 
 UserDAODep = Annotated[UserDAO, Depends(get_dao_factory(UserDAO))]
 
