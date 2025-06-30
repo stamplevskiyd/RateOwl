@@ -12,7 +12,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./:/app
+      - ./owl_core:/app/owl_core
     restart: unless-stopped
 
   db:

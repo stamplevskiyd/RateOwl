@@ -21,7 +21,7 @@ export default function ReviewFormModal({
     });
 
     const save = async () => {
-        const { data } = await api.put(`/api/v1/reviews/${review.id}`, form);
+        const {data} = await api.put(`/api/v1/reviews/${review.id}`, form);
         onSave(data); // обновляем родителя
         onClose();
     };

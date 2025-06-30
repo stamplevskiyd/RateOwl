@@ -5,7 +5,6 @@ from owl_core.models.users import User
 from owl_core.schemas.tags import TagPost
 
 
-
 class UpdateTagCommand(BaseCommand):
     def __init__(
         self,

@@ -3,9 +3,9 @@
 2) Зайти в контейнер
 3) Выполнить команду 
 ```shell
-uv run alembic revision --autogenerate -m "Migration name"
+uv run --no-sync alembic revision --autogenerate -m "Migration name"
 ```
 4) Применение миграции:
 ```shell
-uv run alembic upgrade head
+uv run --no-sync alembic upgrade head
 ```

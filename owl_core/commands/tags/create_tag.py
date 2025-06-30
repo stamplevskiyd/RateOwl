@@ -1,4 +1,3 @@
-
 from owl_core.commands.base_command import BaseCommand
 from owl_core.daos.tag_dao import TagDAO
 from owl_core.models.tags import Tag
