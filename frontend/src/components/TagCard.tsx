@@ -13,7 +13,7 @@ export default function TagCard({
     onEdit: (t: TagRead) => void;
 }) {
     const {user} = useAuth();
-    const isMine = user?.id === tag.author.id; // ← проверка владельца
+    const isMine = user?.id === tag.created_by.id; // ← проверка владельца
 
     const del = async () => {
         if (!confirm('Удалить тег?')) return;

@@ -15,7 +15,7 @@ export default function TitleCard({
     onEdit: (t: TitleRead) => void;
 }) {
     const {user} = useAuth();
-    const isMine = user?.id === item.author.id; // ← проверяем автора
+    const isMine = user?.id === item.created_by.id; // ← проверяем автора
 
     const del = async () => {
         if (!confirm('Удалить медиа?')) return;

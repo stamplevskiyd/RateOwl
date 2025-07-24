@@ -5,16 +5,12 @@ from owl_core.daos.tag_dao import TagDAO
 from owl_core.daos.title_dao import TitleDAO
 from owl_core.models.tags import Tag
 from owl_core.models.titles import Title
-from owl_core.models.users import User
 from owl_core.schemas.titles import TitlePost
 
 
 class CreateTitleCommand(BaseCommand):
-    def __init__(
-        self, title: TitlePost, author: User, title_dao: TitleDAO, tag_dao: TagDAO
-    ):
+    def __init__(self, title: TitlePost, title_dao: TitleDAO, tag_dao: TagDAO):
         self._title = title
-        self._author = author
         self._title_dao = title_dao
         self._tag_dao = tag_dao
         self._tags: list[Tag] = []
@@ -28,7 +24,6 @@ class CreateTitleCommand(BaseCommand):
     async def run(self) -> Title:
         await self.validate()
         created_title = await self._title_dao.create(
-            self._title.model_dump()
-            | {"author_id": self._author.id, "tags": self._tags}
+            self._title.model_dump() | {"tags": self._tags}
         )
         return created_title

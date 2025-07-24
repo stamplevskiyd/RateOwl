@@ -1,9 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import TypeVar
 
 from owl_core.db.base import Base
-
-T = TypeVar("T", bound=Base)
 
 
 class BaseCommand(ABC):
@@ -13,6 +10,6 @@ class BaseCommand(ABC):
         ...
 
     @abstractmethod
-    async def run(self) -> T:
+    async def run(self) -> Base:
         """Run action"""
         ...

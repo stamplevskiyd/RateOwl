@@ -11,6 +11,8 @@ class Settings(BaseSettings):
     DB_USER: str = Field("owl", alias="POSTGRES_USER")
     DB_PASSWORD: str = Field("hoot", alias="POSTGRES_PASSWORD")
     SECRET_KEY: str = Field("owerride-me-secret-key")
+    ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
 
 settings = Settings()  # type: ignore

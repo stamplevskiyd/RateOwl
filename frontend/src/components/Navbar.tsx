@@ -9,7 +9,7 @@ export default function Navbar() {
     return (
         <header className="sticky top-0 z-10 flex items-center gap-1 bg-spruce-700 px-4 py-2 shadow-md">
             <Link to="/" className="flex items-center gap-2">
-                <img src={logoPng} alt="logo" className="h-7 w-7 rounded"/>
+                <img src={logoPng} alt="logo" className="h-24 w-18 rounded"/>
                 <span className="text-xl font-semibold tracking-wide text-gray-100">RateOwl</span>
             </Link>
 

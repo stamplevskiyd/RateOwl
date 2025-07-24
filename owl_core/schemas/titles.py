@@ -11,7 +11,7 @@ class TitleBase(BaseModel):
 class TitleGet(TitleBase):
     id: int
     tags: list[TagGet]
-    author: UserGet
+    created_by: UserGet
 
 
 class TitlePost(TitleBase):

@@ -14,9 +14,11 @@ class BaseDAO[T]:
     """Model class for the DAO."""
     model_cls: type[T]
     base_filter: BinaryExpression | None = None
+    check_access: bool = False
 
-    def __init__(self, session: AsyncSession):
+    def __init__(self, session: AsyncSession, user_id: int | None = None):
         self.session = session
+        self.user_id = user_id
 
         # Get class from type hints
         self.model_cls = get_args(
@@ -52,12 +54,12 @@ class BaseDAO[T]:
         return query
 
     async def find_by_id(self, pk: int) -> T | None:
-        query = self.base_select_query().where(self.model_cls.id == pk)
+        query = self.base_select_query().where(self.model_cls.id == pk)  # type: ignore
         result = await self.session.execute(query)
         return result.scalars().one_or_none()
 
     async def find_by_ids(self, ids: list[int]) -> list[T]:
-        query = self.base_select_query().where(self.model_cls.id.in_(ids))
+        query = self.base_select_query().where(self.model_cls.id.in_(ids))  # type: ignore
         result = await self.session.execute(query)
         return list(result.scalars().all())
 
@@ -72,7 +74,7 @@ class BaseDAO[T]:
         return result.scalars().one_or_none()
 
     async def find_by_id_filtered(self, pk: int, filter_: BinaryExpression) -> T | None:
-        query = self.base_select_query().where(self.model_cls.id == pk).where(filter_)
+        query = self.base_select_query().where(self.model_cls.id == pk).where(filter_)  # type: ignore
         result = await self.session.execute(query)
         return result.scalars().one_or_none()
 

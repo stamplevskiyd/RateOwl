@@ -16,10 +16,10 @@ class ReviewBase(BaseModel):
 
 class ReviewGet(ReviewBase):
     id: int
-    created_at: datetime.datetime
-    updated_at: datetime.datetime
+    created_on: datetime.datetime
+    changed_on: datetime.datetime
     title: TitleGet
-    author: UserGet
+    created_by: UserGet
     tags: list[TagGet]
 
 

@@ -33,7 +33,7 @@ export function AuthProvider({children}: React.PropsWithChildren) {
     /** ───── Авторизация ───── */
     const login = async ({username, password}) => {
         const {data} = await api.post<{ access_token: string }>(
-            'api/v1/users/token',
+            'users/token',
             new URLSearchParams({username, password}),
         );
         localStorage.setItem('token', data.access_token);

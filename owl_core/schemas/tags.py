@@ -9,7 +9,7 @@ class TagBase(BaseModel):
 
 class TagGet(TagBase):
     id: int
-    author: UserGet
+    created_by: UserGet
 
 
 class TagPost(TagBase):

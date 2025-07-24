@@ -5,7 +5,6 @@ from owl_core.daos.review_dao import ReviewDAO
 from owl_core.daos.title_dao import TitleDAO
 from owl_core.models.reviews import Review
 from owl_core.models.titles import Title
-from owl_core.models.users import User
 from owl_core.schemas.reviews import ReviewPost
 
 
@@ -13,12 +12,10 @@ class CreateReviewCommand(BaseCommand):
     def __init__(
         self,
         review: ReviewPost,
-        author: User,
         title_dao: TitleDAO,
         review_dao: ReviewDAO,
     ):
         self._review = review
-        self._author = author
         self._title_dao = title_dao
         self._review_dao = review_dao
 
@@ -29,7 +26,5 @@ class CreateReviewCommand(BaseCommand):
 
     async def run(self) -> Review:
         await self.validate()
-        created_review = await self._review_dao.create(
-            self._review.model_dump() | {"author_id": self._author.id}
-        )
+        created_review = await self._review_dao.create(self._review.model_dump())
         return created_review

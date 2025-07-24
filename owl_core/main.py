@@ -1,7 +1,10 @@
 from fastapi import FastAPI
 
 from owl_core.api.router import api_router
+from owl_core.views.router import views_router
 from fastapi.middleware.cors import CORSMiddleware
+
+from owl_core.middlewares import SetUserMiddleware
 
 app = FastAPI()
 
@@ -19,8 +22,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.add_middleware(SetUserMiddleware)
+
 
 app.include_router(api_router)
+app.include_router(views_router)
 
 
 @app.get("/")

@@ -18,8 +18,8 @@ export interface Review {
   description: string;
   text: string;
   rate: number;
-  created_at: string;
-  updated_at: string;
+  created_on: string;
+  changed_on: string;
   title: Title;
-  author: User;
+  created_by: User;
 }

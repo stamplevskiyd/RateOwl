@@ -26,7 +26,7 @@ export default function ReviewDetails() {
             .catch(() => setErr('Не удалось загрузить обзор'));
     }, [id]);
 
-    const isMine = user && data && user.id === data.author.id;
+    const isMine = user && data && user.id === data.created_by.id;
 
     const handleDelete = async () => {
         if (!confirm('Удалить этот обзор?')) return;
@@ -50,10 +50,10 @@ export default function ReviewDetails() {
                             {data.title.name}
                         </h2>
                         <div className="flex flex-wrap items-center gap-2 text-sm text-zinc-400">
-                            <span>by {data.author.username}</span>
+                            <span>by {data.created_by.username}</span>
                             <span>·</span>
-                            <time dateTime={data.created_at}>
-                                {dayjs(data.created_at).format('DD.MM.YYYY')}
+                            <time dateTime={data.created_on}>
+                                {dayjs(data.created_on).format('DD.MM.YYYY')}
                             </time>
                         </div>
                     </div>

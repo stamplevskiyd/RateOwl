@@ -13,13 +13,7 @@ from os.path import dirname, abspath
 sys.path.insert(0, dirname(dirname(abspath(__file__))))
 
 from owl_core.config import get_db_url
-from owl_core.db.base import Base
-
-########## Models import ##########
-from owl_core.models.reviews import Review  # noqa
-from owl_core.models.users import User  # noqa
-from owl_core.models.titles import Title  # noqa
-###################################
+from owl_core.models import Base
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

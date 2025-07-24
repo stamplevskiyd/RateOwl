@@ -19,7 +19,7 @@ interface Props {
 
 export default function ReviewCard({review, onRemove, onEdit}: Props) {
     const {user} = useAuth();
-    const isMine = user?.id === review.author.id;
+    const isMine = user?.id === review.created_by.id;
 
     /* удаляем обзор и уведомляем родителя */
     const handleDelete = async () => {
@@ -42,8 +42,8 @@ export default function ReviewCard({review, onRemove, onEdit}: Props) {
                             {review.title.name}
                         </h3>
                         <span className="text-xs text-zinc-400">
-              by {review.author.username} ·{' '}
-                            {dayjs(review.created_at).format('DD.MM.YYYY')}
+              by {review.created_by.username} ·{' '}
+                            {dayjs(review.created_on).format('DD.MM.YYYY')}
             </span>
                     </div>
 
