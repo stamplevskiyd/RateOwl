@@ -1,22 +1,5 @@
 #!/usr/bin/env bash
 
-# Licensed to the Apache Software Foundation (ASF) under one
-# or more contributor license agreements.  See the NOTICE file
-# distributed with this work for additional information
-# regarding copyright ownership.  The ASF licenses this file
-# to you under the Apache License, Version 2.0 (the
-# "License"); you may not use this file except in compliance
-# with the License.  You may obtain a copy of the License at
-#
-#   http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing,
-# software distributed under the License is distributed on an
-# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-# KIND, either express or implied.  See the License for the
-# specific language governing permissions and limitations
-# under the License.
-
 set -e
 
 #
@@ -28,22 +11,19 @@ function reset_db() {
   echo --------------------
 
   docker compose stop owl || true
-
-  RESET_DB_CMD="psql \"postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/postgres\" <<-SQL
-  SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '${TEST_POSTGRES_DB}';
-  DROP DATABASE IF EXISTS \"${TEST_POSTGRES_DB}\";
-  CREATE DATABASE \"${TEST_POSTGRES_DB}\";
-  \\connect \"${TEST_POSTGRES_DB}\"
-  SQL"
-
-  echo "$RESET_DB_CMD"
+  RESET_DB_CMD="psql \"postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:/postgres\" <<-'EOF'
+  SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'test';
+  DROP DATABASE IF EXISTS test;
+  CREATE DATABASE test;
+  \\connect test
+EOF"
+echo ${RESET_DB_CMD}
   docker exec -i postgres bash -c "${RESET_DB_CMD}"
-
   docker compose start owl
 }
 
 #
-# Run init test procedures (оставлено как в оригинале, при необходимости верните)
+# Run init test procedures
 #
 function test_init() {
   echo --------------------
@@ -53,9 +33,9 @@ function test_init() {
 }
 
 #
-# Init global vars (берём из окружения, а если не заданы — используем значения по умолчанию)
+# Init global vars
 #
-TEST_POSTGRES_DB=""test
+TEST_POSTGRES_DB="test"
 POSTGRES_USER="${POSTGRES_USER:-owl}"
 POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-hoot}"
 POSTGRES_HOST="${POSTGRES_HOST:-db}"
@@ -133,10 +113,6 @@ while (( "$#" )); do
 done
 
 echo ------------------------------------
-echo POSTGRES_DB="${POSTGRES_DB}"
-echo POSTGRES_USER="${POSTGRES_USER}"
-echo POSTGRES_HOST="${POSTGRES_HOST}"
-echo POSTGRES_PORT="${POSTGRES_PORT}"
 echo Run init procedures=$RUN_INIT
 echo Run reset DB=$RUN_RESET_DB
 echo Test to run:"${TEST_MODULE}"
@@ -148,13 +124,13 @@ then
   reset_db
 fi
 
-pytest
 
-#
-#if [ $RUN_INIT -eq 1 ]
-#then
-#  test_init
-#fi
+if [ $RUN_INIT -eq 1 ]
+then
+  test_init
+fi
+
+pytest
 #
 #if [ $RUN_TESTS -eq 1 ]
 #then

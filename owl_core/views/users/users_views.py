@@ -2,6 +2,8 @@ from typing import Annotated
 
 from fastapi import APIRouter, status, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
+
+from owl_core.config import settings
 from owl_core.daos.dependencies import get_dao_factory
 from owl_core.api.schemas import Token
 from owl_core.daos.user_dao import UserDAO

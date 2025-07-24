@@ -12,6 +12,7 @@ new_session = async_sessionmaker(engine, expire_on_commit=False)
 
 
 async def get_session():
+    print(settings.get_db_url())
     async with new_session() as session:
         try:
             yield session
