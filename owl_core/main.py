@@ -29,6 +29,6 @@ app.include_router(api_router)
 app.include_router(views_router)
 
 
-@app.get("/")
+@app.get("/ping")
 async def test_route() -> str:
     return "Hoot!"

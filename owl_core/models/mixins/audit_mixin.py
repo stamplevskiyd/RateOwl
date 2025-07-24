@@ -21,7 +21,7 @@ class AuditMixin(TimeMixin):
             "User",
             primaryjoin="%s.created_by_fk == User.id" % cls.__name__,
             enable_typechecks=False,
-            lazy="selectin"
+            lazy="selectin",
         )
 
     @declared_attr

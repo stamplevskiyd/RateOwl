@@ -12,7 +12,7 @@ from os.path import dirname, abspath
 
 sys.path.insert(0, dirname(dirname(abspath(__file__))))
 
-from owl_core.config import get_db_url
+from owl_core.config import settings
 from owl_core.models import Base
 
 # this is the Alembic Config object, which provides
@@ -20,7 +20,7 @@ from owl_core.models import Base
 config = context.config
 
 # set sqlalchemy.url
-config.set_main_option("sqlalchemy.url", get_db_url())
+config.set_main_option("sqlalchemy.url", settings.get_db_url())
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
